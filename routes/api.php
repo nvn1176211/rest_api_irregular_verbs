@@ -20,4 +20,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 // Route::get('irregualr_verb', 'Api\VerbsController@index');
 
-Route::apiResource('irregualr_verb', 'Api\VerbsController')->only(['index']);
+// Route::apiResource('irregualr_verb', 'Api\VerbsController')->only(['index', 'show']);
+
+Route::get('irregualr_verb', 'Api\VerbsController@index');
+Route::get('irregualr_verb/{v1}', 'Api\VerbsController@show');
+
+Route::post('irregualr_verb', 'Api\VerbsController@store');
