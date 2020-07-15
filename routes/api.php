@@ -14,17 +14,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-// Route::get('irregualr_verb', 'Api\VerbsController@index');
-
-// Route::apiResource('irregualr_verb', 'Api\VerbsController')->only(['index', 'show']);
-
 //read
 Route::get('irregualr_verb', 'Api\VerbsController@index');
 Route::get('irregualr_verb/{v1}', 'Api\VerbsController@show');
 
 //create
 Route::post('irregualr_verb', 'Api\VerbsController@store');
+
+//update
+Route::post('irregualr_verb/{v1}', 'Api\VerbsController@update');
+
+//delete
+Route::delete('irregualr_verb/{v1}', 'Api\VerbsController@destroy');
