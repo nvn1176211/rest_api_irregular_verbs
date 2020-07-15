@@ -74,9 +74,9 @@ class VerbsController extends Controller
     {
         $result = [];
         $validator = Validator::make($request->all(), [
-            'v1' => 'required|alpha',
-            'v2' => 'alpha',
-            'v3' => 'alpha',
+            'v1' => 'required|alpha|max:20',
+            'v2' => 'required|alpha|max:20',
+            'v3' => 'required|alpha|max:20',
         ]);
         if($validator->fails()){
             $result['error'] = [
@@ -86,33 +86,25 @@ class VerbsController extends Controller
             return response($result, 400);
         }
 
-        if( !isset($request['v2']) && !isset($request['v3']) ){
-            return response('There must be at least one in v2 and v3', 400);   
-        }
-        if( isset($request['v2']) ){
-            $new_v2 = $request['v2'];
-        }
-        if( isset($request['v3']) ){
-            $new_v3 = $request['v3'];
+        $new_v2 = $request['v2'];
+        $new_v3 = $request['v3'];
+        $new_v1 = $request['v1'];
+        if(empty(Database::IRREGULAR_VERBS[$new_v1])){
+            return response("V1 is exist. Please pass a valid v1", 400);   
         }
 
-        $v1 = $request['v1'];
-        if(empty(Database::IRREGULAR_VERBS[$v1])){
-            return response('V1 not found. Please pass a valid v1', 400);   
-        }
-
-        if( !isset(Database::IRREGULAR_VERBS[$v1]['v2']) || !isset(Database::IRREGULAR_VERBS[$v1]['v3']) ){
+        if( !isset(Database::IRREGULAR_VERBS[$new_v1]['v2']) || !isset(Database::IRREGULAR_VERBS[$new_v1]['v3']) ){
             $result['error'] = [
                 'message' => 'Wrong database. Please contact the admin!',
-                'errors' => 'Database is wrong at '.$v1,
+                'errors' => 'Database is wrong at '.$new_v1,
             ];
             return response($result, 500);
         }
 
-        $v2 = Database::IRREGULAR_VERBS[$v1]['v2'];
-        $v3 = Database::IRREGULAR_VERBS[$v1]['v3'];
-        $group_text_verb = '"'.$v1.'"=>["v2"=>"'.$v2.'","v3"=>"'.$v3.'"],';
-        $new_group_text_verb = '"'.$v1.'"=>["v2"=>"'.($new_v2 ?? $v2).'","v3"=>"'.($new_v3 ?? $v3).'"],';
+        $v2 = Database::IRREGULAR_VERBS[$new_v1]['v2'];
+        $v3 = Database::IRREGULAR_VERBS[$new_v1]['v3'];
+        $group_text_verb = '"'.$new_v1.'"=>["v2"=>"'.$v2.'","v3"=>"'.$v3.'"],';
+        $new_group_text_verb = '"'.$new_v1.'"=>["v2"=>"'.($new_v2 ?? $v2).'","v3"=>"'.($new_v3 ?? $v3).'"],';
 
         $old_file_content = file_get_contents('C:\xampp\htdocs\rest_api_irregular_verbs\app\Database.php');
         $new_file_content = str_replace($group_text_verb, $new_group_text_verb, $old_file_content);
@@ -134,32 +126,6 @@ class VerbsController extends Controller
         fwrite($db_file, $new_file_content);
         fclose($db_file);
         return response('ok', 200);   
-        
-        die(123);
-        // $a = readfile('C:\xampp\htdocs\rest_api_irregular_verbs\app\Database.php').'-hello';
-        // return response($a, 200);
-        
-        // $a = file_get_contents;
-        preg_match_all(
-            "|const(.*)awake|U",
-            $a,
-            $out1,
-            PREG_PATTERN_ORDER
-        );
-        return response($out1, 200);
-        return response($result, 200);
-        
-        // $result = [];
-        // $param1 = 2;
-        // $param2 = 2;
-        // $param3 = 2;
-        // if(isset($request['v2'])){
-        //     $result['v2'] = $request['v2'];
-        // }
-        // if(isset($request['v3'])){
-        //     $result['v3'] = $request['v3'];
-        // }
-        // return response(isset($request['v2']), 200);
     }
 
     /**

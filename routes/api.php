@@ -22,7 +22,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 // Route::apiResource('irregualr_verb', 'Api\VerbsController')->only(['index', 'show']);
 
+//read
 Route::get('irregualr_verb', 'Api\VerbsController@index');
 Route::get('irregualr_verb/{v1}', 'Api\VerbsController@show');
 
+//create
 Route::post('irregualr_verb', 'Api\VerbsController@store');
