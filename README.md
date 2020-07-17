@@ -58,6 +58,7 @@ I use php file in source code as a database.
 #### Update info of specified verb
     POST /api/irregualr_verb/SPECIFIED_V1
     POST data format & validation:
+        'SPECIFIED_V1' => 'exist',
         'v2' => 'alpha|max:20',
         'v3' => 'alpha|max:20',
     Example:
